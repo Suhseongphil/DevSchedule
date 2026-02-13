@@ -51,7 +51,7 @@ export function ScheduleForm({ onSuccess, initialSchedule }: Props) {
       return;
     }
     const start = new Date(startAt + "T00:00:00");
-    const end = new Date(endAt + "T00:00:00");
+    const end = new Date(endAt + "T23:59:59.999");
     if (end < start) {
       setMessage({ type: "error", text: "종료일은 시작일 이후여야 합니다." });
       return;
@@ -64,7 +64,7 @@ export function ScheduleForm({ onSuccess, initialSchedule }: Props) {
       start_at: start.toISOString(),
       end_at: end.toISOString(),
       content: content.trim() || null,
-      delayed_end_at: delayedEndAt ? new Date(delayedEndAt + "T00:00:00").toISOString() : null,
+      delayed_end_at: delayedEndAt ? new Date(delayedEndAt + "T23:59:59.999").toISOString() : null,
       color: color.trim() || null,
     };
 

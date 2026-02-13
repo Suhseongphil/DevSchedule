@@ -106,11 +106,11 @@ export default function ScheduleListPage() {
                     key={s.id}
                     className="flex flex-col gap-1 py-2.5 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
                   >
-                    <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-0.5">
                       <p className="text-sm font-medium text-foreground">{s.title}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {format(start, "yyyy.MM.dd (EEE) HH:mm", { locale: ko })}{" "}
-                        ~ {format(endDisplay, "MM.dd HH:mm", { locale: ko })}
+                      <p className="text-xs text-muted-foreground">
+                        {format(start, "yyyy.MM.dd (EEE)", { locale: ko })}{" "}
+                        ~ {format(endDisplay, "yyyy.MM.dd (EEE)", { locale: ko })}
                         {hasDelay && (
                           <span className="ml-1 text-red-500 dark:text-red-400">
                             지연
@@ -118,7 +118,7 @@ export default function ScheduleListPage() {
                         )}
                       </p>
                       {s.content && (
-                        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                        <p className="min-w-0 flex-1 text-xs text-muted-foreground line-clamp-1">
                           {s.content}
                         </p>
                       )}

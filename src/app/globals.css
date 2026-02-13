@@ -1,8 +1,81 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "react-big-calendar/lib/css/react-big-calendar.css";
 
+/* 다크모드: next-themes가 html에 .dark 부여 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 구분 잘 되는 톤: 배경·카드·테두리·강조색 계층 분리 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --radius: 0.75rem;
+  --background: oklch(0.965 0.008 250);
+  --foreground: oklch(0.22 0.02 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.02 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.02 260);
+  --primary: oklch(0.45 0.22 262);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.93 0.015 250);
+  --secondary-foreground: oklch(0.25 0.02 260);
+  --muted: oklch(0.93 0.012 255);
+  --muted-foreground: oklch(0.45 0.025 260);
+  --accent: oklch(0.92 0.02 262);
+  --accent-foreground: oklch(0.25 0.02 260);
+  --destructive: oklch(0.52 0.24 25);
+  --border: oklch(0.86 0.02 250);
+  --input: oklch(0.86 0.02 250);
+  --ring: oklch(0.45 0.22 262);
+  --chart-1: oklch(0.5 0.22 262);
+  --chart-2: oklch(0.6 0.18 180);
+  --chart-3: oklch(0.65 0.18 45);
+  --chart-4: oklch(0.55 0.22 300);
+  --chart-5: oklch(0.6 0.22 25);
+  --sidebar: oklch(0.97 0.006 250);
+  --sidebar-foreground: oklch(0.22 0.02 260);
+  --sidebar-primary: oklch(0.45 0.22 262);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.93 0.015 250);
+  --sidebar-accent-foreground: oklch(0.25 0.02 260);
+  --sidebar-border: oklch(0.86 0.02 250);
+  --sidebar-ring: oklch(0.45 0.22 262);
+}
+
+/* 다크: hex 순수 그레이 (붉은/파란 톤 완전 제거) */
+html.dark,
+.dark {
+  --background: #1a1a1a;
+  --foreground: #fafafa;
+  --card: #262626;
+  --card-foreground: #fafafa;
+  --popover: #262626;
+  --popover-foreground: #fafafa;
+  --primary: #737373;
+  --primary-foreground: #fafafa;
+  --secondary: #404040;
+  --secondary-foreground: #fafafa;
+  --muted: #404040;
+  --muted-foreground: #a3a3a3;
+  --accent: #525252;
+  --accent-foreground: #fafafa;
+  --destructive: oklch(0.55 0.22 25);
+  --border: #404040;
+  --input: #404040;
+  --ring: #737373;
+  --chart-1: oklch(0.65 0.12 145);
+  --chart-2: oklch(0.6 0.1 180);
+  --chart-3: oklch(0.7 0.1 45);
+  --chart-4: oklch(0.6 0.1 280);
+  --chart-5: oklch(0.65 0.12 25);
+  --sidebar: #1f1f1f;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #737373;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #404040;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #404040;
+  --sidebar-ring: #737373;
 }
 
 @theme inline {
@@ -10,17 +83,158 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* React Big Calendar - 일정 바 텍스트 가운데 정렬 */
+.rbc-event {
+  text-align: center;
+}
+
+/* React Big Calendar - 지연 구간 */
+.rbc-event.delayed-event {
+  background-color: #dc2626;
+  border-color: #b91c1c;
+}
+.dark .rbc-event.delayed-event {
+  background-color: #b91c1c;
+  border-color: #991b1b;
+}
+
+/* React Big Calendar - shadcn 토큰 사용, 가로 스크롤만 방지(좁은 화면) */
+.rbc-calendar {
+  @apply text-foreground;
+  min-width: 0;
+  /* 툴바가 잘리지 않도록 overflow는 뷰에만 적용 */
+}
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+  @apply border-border;
+  overflow-x: hidden;
+}
+.rbc-month-view .rbc-month-row {
+  overflow-x: hidden;
+}
+.rbc-header,
+.rbc-time-view .rbc-allday-cell,
+.rbc-time-header-content,
+.rbc-day-slot .rbc-time-slot,
+.rbc-timeslot-group {
+  @apply border-border;
+}
+/* 툴바: 잘리지 않게, 버튼 크기 통일로 선택 시 우측 잘림 방지 */
+.rbc-toolbar {
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+  overflow: visible;
+  min-width: 0;
+}
+.rbc-toolbar button {
+  @apply cursor-pointer border border-border bg-muted text-muted-foreground;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+  min-width: 2.5rem;
+  box-sizing: border-box;
+}
+.rbc-toolbar button:hover,
+.rbc-toolbar button:focus {
+  @apply bg-accent text-accent-foreground;
+}
+.rbc-toolbar button.rbc-active {
+  @apply bg-accent text-accent-foreground;
+}
+.rbc-toolbar button:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+.rbc-date-cell {
+  @apply text-muted-foreground;
+}
+.rbc-date-cell.rbc-now {
+  @apply text-foreground;
+}
+.rbc-event:not(.delayed-event) {
+  @apply bg-primary text-primary-foreground border-primary;
+}
+/* 선택된 날짜 셀 - 라이트 */
+.rbc-selected-cell {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+/* 선택된 날짜 셀 - 다크 모드에서 잘 보이게 */
+.dark .rbc-selected-cell {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+.dark .rbc-off-range-bg {
+  @apply bg-background;
+}
+.dark .rbc-today {
+  @apply bg-muted/50;
+}
+.dark .rbc-agenda-table,
+.dark .rbc-agenda-date-cell,
+.dark .rbc-agenda-time-cell,
+.dark .rbc-agenda-event-cell {
+  @apply border-border text-muted-foreground;
+}
+.dark .rbc-agenda-event-cell {
+  @apply text-foreground;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

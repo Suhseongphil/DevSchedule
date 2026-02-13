@@ -50,3 +50,16 @@ create policy "Allow all for dev_schedules" on public.dev_schedules
 
 create policy "Allow all for work_logs" on public.work_logs
   for all using (true) with check (true);
+
+-- 접속용 로그인 유저 테이블 (회원가입 없음, DB 직접 입력)
+create table if not exists public.users (
+  id uuid primary key default gen_random_uuid(),
+  username text not null unique,
+  password text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.users enable row level security;
+
+create policy "Allow select for login" on public.users
+  for select using (true);

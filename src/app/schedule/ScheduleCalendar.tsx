@@ -10,10 +10,12 @@ const MIN_CALENDAR_HEIGHT = 400;
 
 type Props = {
   events: CalendarEvent[];
+  holidayDates?: Set<string>;
+  holidayNames?: Record<string, string>;
   onSelectSlot?: (slotInfo: { start: Date; end: Date }) => void;
 };
 
-export function ScheduleCalendar({ events, onSelectSlot }: Props) {
+export function ScheduleCalendar({ events, holidayDates, holidayNames, onSelectSlot }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(MIN_CALENDAR_HEIGHT);
 
@@ -35,6 +37,8 @@ export function ScheduleCalendar({ events, onSelectSlot }: Props) {
       <div ref={containerRef} className="relative min-h-0 min-w-0 flex-1">
         <ScheduleCalendarInner
           events={events}
+          holidayDates={holidayDates}
+          holidayNames={holidayNames}
           onSelectSlot={onSelectSlot}
           height={height}
         />
@@ -45,10 +49,14 @@ export function ScheduleCalendar({ events, onSelectSlot }: Props) {
 
 function ScheduleCalendarInner({
   events,
+  holidayDates,
+  holidayNames,
   onSelectSlot,
   height,
 }: {
   events: CalendarEvent[];
+  holidayDates?: Set<string>;
+  holidayNames?: Record<string, string>;
   onSelectSlot?: (slotInfo: { start: Date; end: Date }) => void;
   height: number;
 }) {
@@ -56,6 +64,8 @@ function ScheduleCalendarInner({
     <div className="h-full min-w-0 w-full overflow-x-hidden">
       <CalendarInner
         events={events}
+        holidayDates={holidayDates ?? new Set()}
+        holidayNames={holidayNames ?? {}}
         height={height}
         onSelectSlot={onSelectSlot}
       />

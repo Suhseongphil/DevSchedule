@@ -194,6 +194,10 @@ body {
 .rbc-date-cell {
   @apply text-muted-foreground;
 }
+/* 날짜+공휴일 이름 공간 미리 확보 → 공휴일 적용 시 레이아웃 움직임 방지 */
+.rbc-month-view .rbc-month-row .rbc-row-content > .rbc-row:first-of-type .rbc-date-cell {
+  min-height: 2.25rem;
+}
 /* 일요일 날짜 숫자 빨간색 (weekStartsOn: 0 이라 첫 번째 열이 일요일) */
 .rbc-month-view .rbc-month-row .rbc-row-content > .rbc-row:first-of-type .rbc-date-cell:nth-child(1),
 .rbc-month-view .rbc-month-row .rbc-row-content > .rbc-row:first-of-type .rbc-date-cell:nth-child(1) a {

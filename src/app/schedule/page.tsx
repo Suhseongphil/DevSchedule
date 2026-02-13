@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { DevScheduleRow } from "@/types/database";
 import {
@@ -17,28 +17,57 @@ export default function SchedulePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(() => new Date());
+  const [holidayDates, setHolidayDates] = useState<Set<string>>(new Set());
+  const [holidayNames, setHolidayNames] = useState<Record<string, string>>({});
 
   const supabase = createClient();
 
-  const fetchSchedules = useCallback(async () => {
+  useEffect(() => {
     setLoading(true);
     setError(null);
-    const { data, error: e } = await supabase
+
+    const year = new Date().getFullYear();
+    const schedulesPromise = supabase
       .from("dev_schedules")
       .select("*")
       .order("start_at", { ascending: true });
-    if (e) {
-      setError(e.message);
-      setSchedules([]);
-    } else {
-      setSchedules(data ?? []);
-    }
-    setLoading(false);
-  }, [supabase]);
+    const holidaysPromise = fetch(
+      `/api/holidays-kr?year=${year}&yearEnd=${year + 1}`
+    ).then((res) => res.json());
 
-  useEffect(() => {
-    fetchSchedules();
-  }, [fetchSchedules]);
+    Promise.allSettled([schedulesPromise, holidaysPromise]).then(
+      ([schedulesResult, holidaysResult]) => {
+        if (schedulesResult.status === "fulfilled") {
+          const res = schedulesResult.value;
+          if (res.error) {
+            setError(res.error.message);
+            setSchedules([]);
+          } else {
+            setSchedules(res.data ?? []);
+          }
+        } else {
+          setError(schedulesResult.reason?.message ?? "일정 로딩 실패");
+        }
+        if (holidaysResult.status === "fulfilled") {
+          const body = holidaysResult.value as {
+            dates?: string[];
+            nameByDate?: Record<string, string>;
+          };
+          const arr = Array.isArray(body?.dates) ? body.dates : [];
+          setHolidayDates(new Set(arr));
+          setHolidayNames(
+            typeof body?.nameByDate === "object" && body.nameByDate
+              ? body.nameByDate
+              : {}
+          );
+        } else {
+          setHolidayDates(new Set());
+          setHolidayNames({});
+        }
+        setLoading(false);
+      }
+    );
+  }, [supabase]);
 
   const events: CalendarEvent[] = schedulesToCalendarEvents(schedules);
   const selectedDateSchedules = selectedDate
@@ -60,6 +89,8 @@ export default function SchedulePage() {
         ) : (
           <ScheduleCalendar
             events={events}
+            holidayDates={holidayDates}
+            holidayNames={holidayNames}
             onSelectSlot={({ start }) => setSelectedDate(start)}
           />
         )}

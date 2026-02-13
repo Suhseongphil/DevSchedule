@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { Calendar, dateFnsLocalizer, type View } from "react-big-calendar";
 import { format, startOfWeek, getDay } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -25,33 +25,14 @@ const localizer = dateFnsLocalizer({
 type Props = {
   events: CalendarEvent[];
   height: number;
+  holidayDates: Set<string>;
+  holidayNames: Record<string, string>;
   onSelectSlot?: (slotInfo: { start: Date; end: Date }) => void;
 };
 
-export default function CalendarInner({ events, height, onSelectSlot }: Props) {
+export default function CalendarInner({ events, height, holidayDates, holidayNames, onSelectSlot }: Props) {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<View>("month");
-  const [holidayDates, setHolidayDates] = useState<Set<string>>(new Set());
-  const [holidayNames, setHolidayNames] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const year = date.getFullYear();
-    const ctrl = new AbortController();
-    fetch(`/api/holidays-kr?year=${year}&yearEnd=${year + 1}`, { signal: ctrl.signal })
-      .then((res) => res.json())
-      .then((body: { dates?: string[]; nameByDate?: Record<string, string> }) => {
-        const arr = Array.isArray(body?.dates) ? body.dates : [];
-        setHolidayDates(new Set(arr));
-        setHolidayNames(typeof body?.nameByDate === "object" && body.nameByDate ? body.nameByDate : {});
-      })
-      .catch((err) => {
-        if (err?.name !== "AbortError") {
-          setHolidayDates(new Set());
-          setHolidayNames({});
-        }
-      });
-    return () => ctrl.abort();
-  }, [date.getFullYear(), date.getMonth()]);
 
   const onNavigate = useCallback((newDate: Date) => {
     setDate(newDate);
@@ -91,9 +72,8 @@ export default function CalendarInner({ events, height, onSelectSlot }: Props) {
 
   return (
     <Calendar
-      key={`cal-${date.getFullYear()}-${date.getMonth()}-${holidayDates.size}`}
+      key={`cal-${date.getFullYear()}-${date.getMonth()}`}
       components={{
-        dateHeader: HolidayDateHeader,
         month: { dateHeader: HolidayDateHeader },
       }}
       localizer={localizer}

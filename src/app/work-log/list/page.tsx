@@ -62,7 +62,7 @@ export default function WorkLogListPage() {
     <div className="w-full max-w-[1600px] px-3 py-3">
       <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-foreground">업무목록</h1>
+          <h1 className="text-lg font-semibold text-foreground">일지목록</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
             등록한 업무일지를 날짜순으로 확인할 수 있습니다.
           </p>

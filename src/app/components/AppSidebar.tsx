@@ -20,7 +20,7 @@ import { ThemeToggle } from "./ThemeToggle";
 const navItems = [
   { href: "/schedule", label: "개발일정", icon: Calendar },
   { href: "/schedule/list", label: "일정목록", icon: List },
-  { href: "/work-log/list", label: "업무목록", icon: ClipboardList },
+  { href: "/work-log/list", label: "일지목록", icon: ClipboardList },
 ];
 
 export function AppSidebar() {

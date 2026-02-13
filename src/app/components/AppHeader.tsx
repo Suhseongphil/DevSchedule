@@ -8,7 +8,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/schedule/list": "일정 목록",
   "/schedule/new": "일정등록",
   "/work-log": "업무일지",
-  "/work-log/list": "업무목록",
+  "/work-log/list": "일지목록",
 };
 
 export function AppHeader() {

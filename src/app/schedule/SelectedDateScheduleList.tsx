@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import type { DevScheduleRow } from "@/types/database";
-import { Button } from "@/components/ui/button";
 
 type Props = {
   date: Date | null;
@@ -39,45 +37,25 @@ export function SelectedDateScheduleList({ date, schedules }: Props) {
         ) : (
           <ul className="space-y-2">
             {schedules.map((s) => {
-              const start = new Date(s.start_at);
-              const end = new Date(s.end_at);
               const hasDelay = s.delayed_end_at != null;
-              const endDisplay = hasDelay
-                ? new Date(s.delayed_end_at!)
-                : end;
               return (
                 <li
                   key={s.id}
                   className="rounded-lg border border-border bg-muted/40 p-3"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="font-medium text-sm text-foreground">
-                        {s.title}
-                      </p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {format(start, "HH:mm")} ~ {format(endDisplay, "HH:mm")}
-                        {hasDelay && (
-                          <span className="ml-1 text-red-500 dark:text-red-400">
-                            (지연)
-                          </span>
-                        )}
-                      </p>
-                      {s.content && (
-                        <p className="mt-1.5 whitespace-pre-wrap text-xs text-muted-foreground">
-                          {s.content}
-                        </p>
-                      )}
-                    </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="shrink-0"
-                        asChild
-                      >
-                        <Link href={`/schedule/${s.id}/edit`}>수정</Link>
-                      </Button>
-                  </div>
+                  <p className="font-medium text-sm text-foreground">
+                    {s.title}
+                    {hasDelay && (
+                      <span className="ml-1.5 text-xs text-red-500 dark:text-red-400">
+                        (지연)
+                      </span>
+                    )}
+                  </p>
+                  {s.content && (
+                    <p className="mt-1.5 whitespace-pre-wrap text-xs text-muted-foreground">
+                      {s.content}
+                    </p>
+                  )}
                 </li>
               );
             })}

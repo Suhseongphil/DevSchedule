@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Calendar, dateFnsLocalizer, type View } from "react-big-calendar";
 import { format, startOfWeek, getDay } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -31,6 +31,27 @@ type Props = {
 export default function CalendarInner({ events, height, onSelectSlot }: Props) {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<View>("month");
+  const [holidayDates, setHolidayDates] = useState<Set<string>>(new Set());
+  const [holidayNames, setHolidayNames] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const year = date.getFullYear();
+    const ctrl = new AbortController();
+    fetch(`/api/holidays-kr?year=${year}&yearEnd=${year + 1}`, { signal: ctrl.signal })
+      .then((res) => res.json())
+      .then((body: { dates?: string[]; nameByDate?: Record<string, string> }) => {
+        const arr = Array.isArray(body?.dates) ? body.dates : [];
+        setHolidayDates(new Set(arr));
+        setHolidayNames(typeof body?.nameByDate === "object" && body.nameByDate ? body.nameByDate : {});
+      })
+      .catch((err) => {
+        if (err?.name !== "AbortError") {
+          setHolidayDates(new Set());
+          setHolidayNames({});
+        }
+      });
+    return () => ctrl.abort();
+  }, [date.getFullYear(), date.getMonth()]);
 
   const onNavigate = useCallback((newDate: Date) => {
     setDate(newDate);
@@ -40,8 +61,41 @@ export default function CalendarInner({ events, height, onSelectSlot }: Props) {
     setView(newView);
   }, []);
 
+  const HolidayDateHeader = useCallback(
+    ({ date: cellDate, label, drilldownView, onDrillDown }: { date: Date; label: string; drilldownView?: string; onDrillDown?: (e: React.MouseEvent) => void }) => {
+      const key = format(cellDate, "yyyy-MM-dd");
+      const isHoliday = holidayDates.has(key);
+      const name = holidayNames[key];
+      const content =
+        drilldownView != null && onDrillDown ? (
+          <button type="button" className="rbc-button-link" onClick={onDrillDown}>
+            {label}
+          </button>
+        ) : (
+          <span>{label}</span>
+        );
+      if (!isHoliday) return content;
+      return (
+        <span className="rbc-date-cell-holiday" title={name ?? undefined}>
+          {content}
+          {name && (
+            <span className="rbc-date-cell-holiday-name" aria-hidden>
+              {name}
+            </span>
+          )}
+        </span>
+      );
+    },
+    [holidayDates, holidayNames]
+  );
+
   return (
     <Calendar
+      key={`cal-${date.getFullYear()}-${date.getMonth()}-${holidayDates.size}`}
+      components={{
+        dateHeader: HolidayDateHeader,
+        month: { dateHeader: HolidayDateHeader },
+      }}
       localizer={localizer}
       events={events}
       startAccessor="start"

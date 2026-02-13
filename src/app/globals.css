@@ -194,6 +194,44 @@ body {
 .rbc-date-cell {
   @apply text-muted-foreground;
 }
+/* 일요일 날짜 숫자 빨간색 (weekStartsOn: 0 이라 첫 번째 열이 일요일) */
+.rbc-month-view .rbc-month-row .rbc-row-content > .rbc-row:first-of-type .rbc-date-cell:nth-child(1),
+.rbc-month-view .rbc-month-row .rbc-row-content > .rbc-row:first-of-type .rbc-date-cell:nth-child(1) a {
+  color: #dc2626;
+}
+.dark .rbc-month-view .rbc-month-row .rbc-row-content > .rbc-row:first-of-type .rbc-date-cell:nth-child(1),
+.dark .rbc-month-view .rbc-month-row .rbc-row-content > .rbc-row:first-of-type .rbc-date-cell:nth-child(1) a {
+  color: #f87171;
+}
+/* 한국 공휴일 날짜 숫자 빨간색 + 공휴일 이름 표기 */
+.rbc-date-cell .rbc-date-cell-holiday,
+.rbc-date-cell .rbc-date-cell-holiday a,
+.rbc-date-cell .rbc-date-cell-holiday button {
+  color: #dc2626 !important;
+}
+.rbc-date-cell .rbc-date-cell-holiday {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.rbc-date-cell .rbc-date-cell-holiday-name {
+  font-size: 0.6rem;
+  line-height: 1.2;
+  font-weight: 500;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dark .rbc-date-cell .rbc-date-cell-holiday,
+.dark .rbc-date-cell .rbc-date-cell-holiday a,
+.dark .rbc-date-cell .rbc-date-cell-holiday button {
+  color: #f87171 !important;
+}
+.dark .rbc-date-cell .rbc-date-cell-holiday-name {
+  color: #f87171;
+}
 .rbc-date-cell.rbc-now {
   @apply text-foreground;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, type View } from "react-big-calendar";
 import { format, startOfWeek, getDay } from "date-fns";
 import { ko } from "date-fns/locale";
 import type { CalendarEvent } from "@/lib/calendar-utils";
@@ -30,13 +30,13 @@ type Props = {
 
 export default function CalendarInner({ events, height, onSelectSlot }: Props) {
   const [date, setDate] = useState(new Date());
-  const [view, setView] = useState<string>("month");
+  const [view, setView] = useState<View>("month");
 
   const onNavigate = useCallback((newDate: Date) => {
     setDate(newDate);
   }, []);
 
-  const onView = useCallback((newView: string) => {
+  const onView = useCallback((newView: View) => {
     setView(newView);
   }, []);
 
